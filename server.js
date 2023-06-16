@@ -23,7 +23,5 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Database Connected..."))
-  .catch((error) => {
-    console.error("Failed to connect to the MongoDB database:", error);
-  });
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log("Error: ", err));
