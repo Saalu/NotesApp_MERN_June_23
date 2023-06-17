@@ -7,7 +7,7 @@ const sampleUser = {
     try {
       const { username, email, password } = req.body;
       const user = await Users.findOne({ email: email });
-      if (user) return res.status(400).json("The user already exists.");
+      if (user) return res.status(400).json("The user already exist.");
 
       const hashPassword = await bcrypt.hash(password, 10);
 
@@ -22,9 +22,19 @@ const sampleUser = {
       return res.status(500).json(err.message);
     }
   },
-  userLogin: (req, res) => {
-    // const user = req.body;
-    res.json(req.body);
+  userLogin: async (req, res) => {
+    const { email, password } = req.body;
+    const user = await Users.findOne({ email: email });
+    if (!user) return res.status(400).json("User does not exist");
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json("Incorrect password");
+
+    //if login success create token
+    const payload = { id: user._id, name: user.username };
+    const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+
+    res.json(token);
   },
   userToken: (req, res) => {
     res.json("Sample token");
