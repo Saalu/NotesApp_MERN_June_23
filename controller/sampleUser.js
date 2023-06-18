@@ -37,7 +37,17 @@ const sampleUser = {
     res.json(token);
   },
   userToken: (req, res) => {
-    res.json("Sample token");
+    const token = req.header("Authorization");
+    if (!token) return res.send(false);
+
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+      if (err) return res.send(false);
+
+      const user = await Users.findById(decoded.id);
+      if (!user) return res.send(false);
+
+      res.send(true);
+    });
   },
 };
 
