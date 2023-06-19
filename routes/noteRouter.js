@@ -1,10 +1,13 @@
 const router = require("express").Router();
+const auth = require("../middleware/auth");
+const noteCtrl = require("../controller/noteCtrl");
+
+router.route("/").get(auth, noteCtrl.getNotes).post(auth, noteCtrl.postNote);
 
 router
-  .route("/")
-  .get((req, res) => res.json({ msg: "Test notes" }))
-  .post();
-
-router.route("/:id").get().put().delete();
+  .route("/:id")
+  .get(noteCtrl.getNote)
+  .put(noteCtrl.updateNote)
+  .delete(noteCtrl.deleteNote);
 
 module.exports = router;
