@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function Login() {
+function Login({ setIsLogin }) {
   const [user, setUser] = useState({ name: "", email: "", password: "" });
   const [err, setErr] = useState("");
 
@@ -34,6 +34,8 @@ function Login() {
         password: user.password,
       });
       setUser({ email: "", password: "" });
+      setErr(res.data.msg);
+      setIsLogin(true);
       localStorage.setItem("tokenStore", res.data.token);
     } catch (err) {
       err.response.data.msg && setErr(err.response.data.msg);
@@ -62,8 +64,10 @@ function Login() {
           />
 
           <button type="submit">Login</button>
-          <p>You don't have an account</p>
-          <span>Register Now</span>
+          <p>
+            <span>Register Now</span>
+          </p>
+          <h3>{err}</h3>
         </form>
       </div>
       <div className="register">
