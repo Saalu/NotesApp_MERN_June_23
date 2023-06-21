@@ -1,22 +1,56 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function Login() {
-  const [user, setuser] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [user, setUser] = useState({ name: "", email: "", password: "" });
+  const [err, setErr] = useState("");
+
+  const onChangeInput = (e) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
+
+  const registerSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post("/users/register", {
+        username: user.name,
+        email: user.email,
+        password: user.password,
+      });
+      setUser({ name: "", email: "", password: "" });
+      setErr(res.data.msg);
+    } catch (err) {
+      err.response.data.msg && setErr(err.response.data.msg);
+    }
+  };
+  const loginSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post("/users/login", {
+        email: user.email,
+        password: user.password,
+      });
+      setUser({ email: "", password: "" });
+      localStorage.setItem("tokenStore", res.data.token);
+    } catch (err) {
+      err.response.data.msg && setErr(err.response.data.msg);
+    }
+  };
   return (
     <div>
-      <div className="lgin">
+      <div className="login">
         <h2>Login</h2>
-        <form>
+        <form onSubmit={loginSubmit}>
           <input
             type="email"
             name="email"
             id="login-email"
             placeholder="Email"
             value={user.email}
+            onChange={onChangeInput}
           />
           <input
             type="password"
@@ -24,6 +58,7 @@ function Login() {
             id="login-password"
             placeholder="Password"
             value={user.password}
+            onChange={onChangeInput}
           />
 
           <button type="submit">Login</button>
@@ -33,32 +68,38 @@ function Login() {
       </div>
       <div className="register">
         <h2>Register</h2>
-        <form>
+        <form onSubmit={registerSubmit}>
           <input
-            type="name"
+            type="text"
             name="name"
-            id="login-name"
+            id="register-name"
             placeholder="Name"
             value={user.name}
+            onChange={onChangeInput}
           />
           <input
             type="email"
             name="email"
-            id="login-email"
+            id="register-email"
             placeholder="Email"
             value={user.email}
+            onChange={onChangeInput}
           />
           <input
             type="password"
             name="password"
-            id="login-password"
+            id="register-password"
             placeholder="Password"
             value={user.password}
+            onChange={onChangeInput}
           />
 
-          <button type="submit">Login</button>
-          <p>You don't have an account</p>
-          <span>Register Now</span>
+          <button type="submit">Register</button>
+          <p>
+            You don't have an account?
+            <span>Register Now</span>
+          </p>
+          <h3>{err}</h3>
         </form>
       </div>
     </div>

@@ -6,7 +6,11 @@ import { useState } from "react";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
-  return <div className="App">{isLogin ? <Notes /> : <Login />}</div>;
+  return (
+    <div className="App">
+      {isLogin ? <Notes /> : <Login setIsLogin={setIsLogin} />}
+    </div>
+  );
 }
 
 export default App;
