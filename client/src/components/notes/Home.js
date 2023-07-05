@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { format } from "timeago.js";
 import axios from "axios";
 
@@ -13,6 +13,7 @@ function Home() {
     });
     setNotes(res.data);
   };
+  // const { edit } = useParams;
 
   useEffect(() => {
     const token = localStorage.getItem("tokenStore");
@@ -23,7 +24,6 @@ function Home() {
   }, []);
 
   const deleteNote = async (id) => {
-    console.log(id);
     try {
       if (token) {
         await axios.delete(`api/notes/${id}`, {

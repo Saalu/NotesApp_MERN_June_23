@@ -14,7 +14,7 @@ function Notes({ setIsLogin }) {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create" element={<Create />} />
-            <Route path="/edit/:id" element={<Edit />} />
+            <Route path="/edit/:itemId" element={<Edit />} />
           </Routes>
         </section>
       </div>
